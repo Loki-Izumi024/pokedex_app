@@ -17,38 +17,82 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const headerStyle = {
-  headerStyle: { backgroundColor: colors.primary },
+  headerStyle: {
+    backgroundColor: colors.primary,
+    elevation: 0,
+    shadowOpacity: 0,
+    borderBottomWidth: 0,
+  },
   headerTintColor: "#fff",
-  headerTitleStyle: { fontWeight: "800" },
+  headerTitleStyle: { fontWeight: "800", fontSize: 20 },
+  headerTitleAlign: "center",
 };
 
-const icon = (emoji) => ({ focused }) =>
-  <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.5 }}>{emoji}</Text>;
+const tabBarStyle = {
+  backgroundColor: "#fff",
+  borderTopWidth: 0,
+  borderRadius: 20,
+  marginHorizontal: 12,
+  marginBottom: 10,
+  height: 72,
+  paddingTop: 8,
+  paddingBottom: 8,
+  shadowColor: "#000",
+  shadowOpacity: 0.08,
+  shadowRadius: 10,
+  shadowOffset: { width: 0, height: -4 },
+  elevation: 8,
+};
+
+const icon = (emoji) => ({ focused }) => (
+  <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.6 }}>{emoji}</Text>
+);
 
 function Tabs() {
-  const { team } = useTeam();
+  const teamContext = useTeam() || {};
+  const team = Array.isArray(teamContext.team) ? teamContext.team : [];
+  const badgeCount = team.length > 0 ? team.length : undefined;
+
   return (
     <Tab.Navigator
+      initialRouteName="Pokedex"
       screenOptions={{
         ...headerStyle,
+        tabBarStyle,
         tabBarActiveTintColor: colors.primary,
-        tabBarLabelStyle: { fontWeight: "700" },
+        tabBarInactiveTintColor: colors.muted,
+        tabBarActiveBackgroundColor: colors.surface,
+        tabBarItemStyle: { borderRadius: 14, marginHorizontal: 4 },
+        tabBarLabelStyle: { fontWeight: "700", fontSize: 12 },
+        tabBarIconStyle: { marginBottom: 2 },
       }}
     >
       <Tab.Screen
-        name="Pokédex"
+        name="Pokedex"
         component={PokedexScreen}
-        options={{ title: `${STUDENT_NAME}’s Pokédex`, tabBarLabel: "Pokédex", tabBarIcon: icon("📖") }}
+        options={{
+          title: `${STUDENT_NAME}’s Pokédex`,
+          tabBarLabel: "Pokédex",
+          tabBarIcon: icon("📖"),
+        }}
       />
       <Tab.Screen
-        name="My Team"
+        name="Team"
         component={TeamScreen}
-        options={{ tabBarIcon: icon("⭐"), tabBarBadge: team.length > 0 ? team.length : undefined }}
+        options={{
+          title: "My Team",
+          tabBarIcon: icon("⭐"),
+          tabBarBadge: badgeCount,
+        }}
       />
       <Tab.Screen
         name="Game"
         component={GameScreen}
-        options={{ title: "Who’s That Pokémon?", tabBarLabel: "Game", tabBarIcon: icon("🎮") }}
+        options={{
+          title: "Who’s That Pokémon?",
+          tabBarLabel: "Game",
+          tabBarIcon: icon("🎮"),
+        }}
       />
     </Tab.Navigator>
   );
@@ -59,8 +103,18 @@ export default function App() {
     <TeamProvider>
       <NavigationContainer>
         <StatusBar style="light" />
-        <Stack.Navigator screenOptions={headerStyle}>
-          <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
+        <Stack.Navigator
+          initialRouteName="PokedexTabs"
+          screenOptions={{
+            ...headerStyle,
+            headerShadowVisible: false,
+          }}
+        >
+          <Stack.Screen
+            name="PokedexTabs"
+            component={Tabs}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="Detail" component={DetailScreen} options={{ title: "Details" }} />
         </Stack.Navigator>
       </NavigationContainer>

@@ -2,13 +2,16 @@ import { THEME_COLOR } from "./config";
 
 export const colors = {
   primary: THEME_COLOR,
-  bg: "#F5F3FA",
+  accent: "#8E73F3",
+  bg: "#F7F3FF",
+  surface: "#F0EAFF",
   card: "#FFFFFF",
   text: "#1E1B2E",
-  muted: "#7A7690",
+  muted: "#726B89",
   green: "#2E9E5B",
   red: "#D64545",
-  border: "#E4E0EF",
+  border: "#E7E0F7",
+  shadow: "#D7CCFF",
 };
 
 export const typeColors = {
